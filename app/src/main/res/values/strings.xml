@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Изучаем грибы</string>
+    <string name="title_home">Дом</string>
+    <string name="title_dashboard">хуй</string>
+    <string name="title_notifications">уведомления</string>
+    <string name="login">войти</string>
+    <string name="password">пароль</string>
+    <string name="password_capital">Пароль</string>
+    <string name="login_capital">Войти</string>
+    <string name="username_capital">Имя пользователя</string>
+    <string name="username">имя пользователя</string>
+
+    <string name="sign_up">Регистрация</string>
+    <string name="e_mail">Email</string>
+    <string name="email">email</string>
+    <string name="catalog">Каталог</string>
+    <string name="map">Карты</string>
+    <string name="title_recognition">Распознавание</string>
+    <string name="title_notes">Заметки</string>
+</resources>
