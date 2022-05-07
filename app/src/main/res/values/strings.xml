@@ -28,4 +28,11 @@
     <string name="ellipsised_description_template" formatted="true">%1$s\u2026</string>
 
     <string name="proba_template" formatted="true">Уверенность %1$.3f\%</string>
+
+    <string name="search_title">Поиск</string>
+
+    <string name="mushrooms_error_template" formatted="true">Failed to load mushrooms, error %1$s</string>
+    <string name="notes_error_template" formatted="true">Failed to load notes, error %1$s</string>
+
+    <string name="login_error">Что-то пошло не так, вероятно, были предоставлены неверные данные.</string>
 </resources>

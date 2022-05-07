@@ -44,9 +44,8 @@ class RecognitionItem(val recognition: RecognitionModel) : Item<GroupieViewHolde
 
         val card = viewHolder.itemView.findViewById<MaterialCardView>(R.id.card)
         card.setOnClickListener {
-            val intent = Intent(it.context, MushroomActivity::class.java)
-            intent.putExtra("model", recognition.mushroom)
-            it.context.startActivity(intent)
+            val intent = MushroomActivity.newInstance(context, recognition.mushroom)
+            context.startActivity(intent)
         }
     }
 }

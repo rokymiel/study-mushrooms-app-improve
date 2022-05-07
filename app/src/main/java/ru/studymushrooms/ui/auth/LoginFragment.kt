@@ -11,12 +11,13 @@ import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(R.layout.login_fragment) {
 
     private lateinit var usernameEditTextLogin: TextInputEditText
     private lateinit var passwordEditTextLogin: TextInputEditText
@@ -26,20 +27,7 @@ class LoginFragment : Fragment() {
     private lateinit var passwordEditTextRegister: TextInputEditText
     private lateinit var signupButton: Button
 
-
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
     private val viewModel: LoginViewModel by activityViewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return inflater.inflate(R.layout.login_fragment, container, false)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -51,12 +39,14 @@ class LoginFragment : Fragment() {
         passwordEditTextRegister = requireView().findViewById(R.id.signup_password_edittext)
         emailEditTextRegister = requireView().findViewById(R.id.signup_email_edittext)
         signupButton = requireView().findViewById(R.id.signup_button)
+
         loginButton.setOnClickListener {
             viewModel.authenticate(
                 usernameEditTextLogin.text.toString(),
                 passwordEditTextLogin.text.toString()
             )
         }
+
         signupButton.setOnClickListener {
             viewModel.register(
                 usernameEditTextRegister.text.toString(),
@@ -69,19 +59,21 @@ class LoginFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             viewModel.refuseAuthentication()
         }
-        viewModel.authenticationState.observe(viewLifecycleOwner, Observer { authenticationState ->
+
+        viewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
             when (authenticationState) {
                 LoginViewModel.AuthenticationState.AUTHENTICATED -> navController.popBackStack()
                 LoginViewModel.AuthenticationState.INVALID_AUTHENTICATION -> showErrorMessage()
             }
-        })
+        }
 
     }
 
-    fun showErrorMessage() {
+    private fun showErrorMessage() {
         AlertDialog.Builder(activity)
-            .setMessage("Что-то пошло не так, вероятно, были предоставлены неверные данные.")
-            .create().show()
+            .setMessage(getString(R.string.login_error))
+            .create()
+            .show()
         viewModel.refuseAuthentication()
     }
 

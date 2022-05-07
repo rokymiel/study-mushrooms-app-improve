@@ -1,6 +1,7 @@
 package ru.studymushrooms.ui.auth
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import retrofit2.Call
@@ -17,12 +18,13 @@ class LoginViewModel : ViewModel() {
         INVALID_AUTHENTICATION
     }
 
-    val authenticationState = MutableLiveData<AuthenticationState>()
+    val _authenticationState = MutableLiveData<AuthenticationState>()
+    val authenticationState: LiveData<AuthenticationState> = _authenticationState
 
     var username: String
 
     init {
-        authenticationState.value = AuthenticationState.UNAUTHENTICATED
+        _authenticationState.value = AuthenticationState.UNAUTHENTICATED
         username = ""
     }
 
@@ -39,7 +41,7 @@ class LoginViewModel : ViewModel() {
         call.enqueue(object : retrofit2.Callback<TokenResponse> {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 Log.e("Retrofit", t.toString())
-                authenticationState.value = AuthenticationState.UNAUTHENTICATED
+                _authenticationState.value = AuthenticationState.UNAUTHENTICATED
             }
 
             override fun onResponse(
@@ -48,9 +50,10 @@ class LoginViewModel : ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     App.token = "Token " + response.body()?.token
-                    authenticationState.value = AuthenticationState.AUTHENTICATED
-                } else
-                    authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
+                    _authenticationState.value = AuthenticationState.AUTHENTICATED
+                } else {
+                    _authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
+                }
             }
 
         })
@@ -69,15 +72,15 @@ class LoginViewModel : ViewModel() {
         call.enqueue(object : retrofit2.Callback<TokenResponse> {
             override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
                 Log.e("Retrofit", t.toString())
-                authenticationState.value = AuthenticationState.UNAUTHENTICATED
+                _authenticationState.value = AuthenticationState.UNAUTHENTICATED
             }
 
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                 if (response.isSuccessful) {
                     App.token = "Token " + response.body()?.token
-                    authenticationState.value = AuthenticationState.AUTHENTICATED
+                    _authenticationState.value = AuthenticationState.AUTHENTICATED
                 } else
-                    authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
+                    _authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
 
             }
 
@@ -85,6 +88,6 @@ class LoginViewModel : ViewModel() {
     }
 
     fun refuseAuthentication() {
-        authenticationState.value = AuthenticationState.UNAUTHENTICATED
+        _authenticationState.value = AuthenticationState.UNAUTHENTICATED
     }
 }

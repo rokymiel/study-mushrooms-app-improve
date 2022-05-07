@@ -53,9 +53,8 @@ class CatalogItem(val mushroom: MushroomModel) : Item() {
 
         val card = viewHolder.itemView.findViewById<MaterialCardView>(R.id.card)
         card.setOnClickListener {
-            val intent = Intent(it.context, MushroomActivity::class.java)
-            intent.putExtra("model", mushroom)
-            it.context.startActivity(intent)
+            val intent = MushroomActivity.newInstance(context, mushroom)
+            context.startActivity(intent)
         }
     }
 }
