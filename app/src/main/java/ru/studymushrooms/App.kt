@@ -6,15 +6,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.studymushrooms.api.ServerApi
 
+private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
+
 class App : Application() {
-
-
     override fun onCreate() {
         super.onCreate()
         retrofit = Retrofit.Builder().baseUrl(baseUrl)
             .addConverterFactory(
                 GsonConverterFactory.create(
-                    GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create()
+                    GsonBuilder().setDateFormat(DATE_FORMAT).create()
                 )
             ).build()
         api = retrofit.create(ServerApi::class.java)

@@ -61,7 +61,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.location_permission_toast),
+                    Toast.LENGTH_LONG
+                ).show()
                 val intent =
                     Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
