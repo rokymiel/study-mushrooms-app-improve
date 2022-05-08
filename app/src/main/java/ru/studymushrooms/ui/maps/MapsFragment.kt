@@ -58,7 +58,7 @@ class MapsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val context = activity?.applicationContext
         Configuration.getInstance()
-            .load(context, PreferenceManager.getDefaultSharedPreferences(context))
+            .load(context, PreferenceManager.getDefaultSharedPreferences(requireContext()))
 
         mMapView = view.findViewById(R.id.map_view) as MapView
         mMapView.isTilesScaledToDpi = true;
