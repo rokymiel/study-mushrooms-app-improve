@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,20 +40,19 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
-        loginViewModel.authenticationState.observe(viewLifecycleOwner,
-            Observer { authenticationState ->
-                when (authenticationState) {
-                    LoginViewModel.AuthenticationState.AUTHENTICATED -> {
-                        (activity as MainActivity).showBottomNav()
-                        observeToastEvents()
-                        loadData()
-                    }
-                    else -> {
-                        (activity as MainActivity).hideBottomNav()
-                        navController.navigate(R.id.navigate_to_login_fragment)
-                    }
+        loginViewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
+            when (authenticationState) {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+                    (activity as MainActivity).showBottomNav()
+                    observeToastEvents()
+                    loadData()
                 }
-            })
+                else -> {
+                    (activity as MainActivity).hideBottomNav()
+                    navController.navigate(R.id.navigate_to_login_fragment)
+                }
+            }
+        }
     }
 
     private fun observeToastEvents() {
@@ -75,12 +73,12 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
         catalogRecyclerView.adapter = adapter
         catalogRecyclerView.layoutManager = GridLayoutManager(context, 2)
 
-        catalogViewModel.mushrooms.observe(viewLifecycleOwner, Observer { mushrooms ->
+        catalogViewModel.mushrooms.observe(viewLifecycleOwner) { mushrooms ->
             for (mushroom in mushrooms) {
                 items.add(CatalogItem(mushroom))
             }
             adapter.addAll(items)
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -97,8 +95,8 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null)
                     adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
-                            .contains(query.toLowerCase(Locale.getDefault()))
+                        it.mushroom.name.lowercase(Locale.getDefault())
+                            .contains(query.lowercase(Locale.getDefault()))
                     }, true, null)
                 else
                     adapter.updateAsync(items, true, null)
@@ -106,13 +104,15 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null)
-                    adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
-                            .contains(newText.toLowerCase(Locale.getDefault()))
-                    }, true, null)
-                else
+                if (newText != null) {
+                    val newItems = items.filter {
+                        it.mushroom.name.lowercase(Locale.getDefault())
+                            .contains(newText.lowercase(Locale.getDefault()))
+                    }
+                    adapter.updateAsync(newItems, true, null)
+                } else {
                     adapter.updateAsync(items, true, null)
+                }
                 return true
             }
         })

@@ -18,14 +18,11 @@ class LoginViewModel : ViewModel() {
         INVALID_AUTHENTICATION
     }
 
-    val _authenticationState = MutableLiveData<AuthenticationState>()
+    private val _authenticationState = MutableLiveData<AuthenticationState>()
     val authenticationState: LiveData<AuthenticationState> = _authenticationState
-
-    var username: String
 
     init {
         _authenticationState.value = AuthenticationState.UNAUTHENTICATED
-        username = ""
     }
 
 

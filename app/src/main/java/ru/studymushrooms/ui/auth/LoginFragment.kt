@@ -3,6 +3,7 @@ package ru.studymushrooms.ui.auth
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
@@ -24,8 +25,8 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
 
     private val viewModel: LoginViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         usernameEditTextLogin = requireView().findViewById(R.id.login_edittext)
         passwordEditTextLogin = requireView().findViewById(R.id.password_edittext)
         loginButton = requireView().findViewById(R.id.login_button)

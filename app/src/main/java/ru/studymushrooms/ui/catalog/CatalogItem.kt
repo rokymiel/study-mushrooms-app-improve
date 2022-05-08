@@ -1,6 +1,5 @@
 package ru.studymushrooms.ui.catalog
 
-import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
