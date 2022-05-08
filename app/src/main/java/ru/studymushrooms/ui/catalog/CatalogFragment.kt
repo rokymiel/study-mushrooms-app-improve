@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +19,7 @@ import ru.studymushrooms.ui.auth.LoginViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-class CatalogFragment : Fragment() {
+class CatalogFragment : Fragment(R.layout.fragment_catalog) {
 
     private val loginViewModel: LoginViewModel by activityViewModels()
     private val catalogViewModel: CatalogViewModel by viewModels()
@@ -36,7 +34,7 @@ class CatalogFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_catalog, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
 

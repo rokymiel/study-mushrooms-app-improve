@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
 
-class CreateNoteFragment : Fragment() {
+class CreateNoteFragment : Fragment(R.layout.fragment_create_note) {
 
     private val viewModel: NotesViewModel by activityViewModels()
 
@@ -23,7 +23,7 @@ class CreateNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_create_note, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

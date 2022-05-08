@@ -16,20 +16,12 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.studymushrooms.R
 
-class NotesFragment : Fragment() {
+class NotesFragment : Fragment(R.layout.notes_fragment) {
     private val notesViewModel: NotesViewModel by activityViewModels()
 
     private lateinit var recyclerView: RecyclerView
     private val adapter: GroupAdapter<GroupieViewHolder> = GroupAdapter()
     private val items: ArrayList<NoteItem> = ArrayList()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return inflater.inflate(R.layout.notes_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
