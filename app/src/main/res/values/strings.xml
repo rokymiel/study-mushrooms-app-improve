@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Изучаем грибы</string>
     <string name="title_home">Дом</string>
@@ -17,4 +18,31 @@
     <string name="map">Карты</string>
     <string name="title_recognition">Распознавание</string>
     <string name="title_notes">Заметки</string>
+
+    <string name="location_permission_toast">Turn on location</string>
+    
+    <string name="edible_mushroom">Съедобный</string>
+    <string name="halfedible_mushroom">Полусъедобный</string>
+    <string name="inedible_mushroom">Несъедобный</string>
+    
+    <string name="ellipsised_description_template" formatted="true">%1$s…</string>
+
+    <string name="proba_template" formatted="true">Уверенность %1$.3f\%</string>
+
+    <string name="search_title">Поиск</string>
+
+    <string name="mushrooms_error_template" formatted="true">Failed to load mushrooms, error %1$s</string>
+    <string name="notes_error_template" formatted="true">Failed to load notes, error %1$s</string>
+
+    <string name="login_error">Что-то пошло не так, вероятно, были предоставлены неверные данные.</string>
+    <string name="photo_new_mushroom_label">Сфотографировать новый гриб</string>
+    <string name="choose_from_local_storage_label">Выбрать из локального хранилища</string>
+    <string name="recognition_label">Скорее всего это…</string>
+
+    <string name="remember_place_location">Запомнить место?</string>
+    <string name="use_current_location">Использовать текущую геолокацию</string>
+    <string name="use_picture_location">Использовать данные о геолокации картинки</string>
+
+    <string name="confirm_button_text">Да</string>
+    <string name="dismiss_button_text">Отмена</string>
 </resources>

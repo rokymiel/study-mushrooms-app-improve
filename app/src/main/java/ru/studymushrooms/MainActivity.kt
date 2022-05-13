@@ -21,17 +21,21 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+private const val PERMISSION_ID = 44
 
 class MainActivity : AppCompatActivity() {
-    var PERMISSION_ID = 44
-    var mFusedLocationClient: FusedLocationProviderClient? = null
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+
     var location: Location? = null
+        private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         getLastLocation()
+
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -61,9 +65,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show()
-                val intent =
-                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                Toast.makeText(
+                    this,
+                    getString(R.string.location_permission_toast),
+                    Toast.LENGTH_LONG
+                ).show()
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(intent)
             }
         } else {
@@ -73,15 +80,18 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
-        val mLocationRequest = LocationRequest()
-        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 0
-        mLocationRequest.fastestInterval = 0
-        mLocationRequest.numUpdates = 1
+        val mLocationRequest = LocationRequest().apply {
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            interval = 0
+            fastestInterval = 0
+            numUpdates = 1
+        }
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         (mFusedLocationClient as FusedLocationProviderClient).requestLocationUpdates(
-            mLocationRequest, mLocationCallback,
-            Looper.myLooper()
+            mLocationRequest,
+            mLocationCallback,
+            Looper.getMainLooper()
         )
     }
 
@@ -129,7 +139,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_ID) {
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation()
             }
         }

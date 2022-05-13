@@ -3,9 +3,10 @@ package ru.studymushrooms.ui.catalog
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,55 +18,67 @@ import ru.studymushrooms.ui.auth.LoginViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-
-class CatalogFragment : Fragment() {
+class CatalogFragment : Fragment(R.layout.fragment_catalog) {
 
     private val loginViewModel: LoginViewModel by activityViewModels()
-    private val catalogViewModel: CatalogViewModel by activityViewModels()
+    private val catalogViewModel: CatalogViewModel by viewModels()
+
     private val items: ArrayList<CatalogItem> = ArrayList()
     private lateinit var catalogRecyclerView: RecyclerView
     private lateinit var adapter: GroupAdapter<GroupieViewHolder>
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_catalog, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
-        loginViewModel.authenticationState.observe(
-            viewLifecycleOwner,
-            Observer { authenticationState ->
-                when (authenticationState) {
-                    LoginViewModel.AuthenticationState.AUTHENTICATED -> {
-                        (activity as MainActivity).showBottomNav()
-                        catalogViewModel.loadData(requireContext())
-                        adapter = GroupAdapter()
-                        catalogViewModel.mushrooms.observe(viewLifecycleOwner, Observer {
-                            if (catalogViewModel.mushrooms.value != null) {
-                                for (i in catalogViewModel.mushrooms.value!!) {
-                                    items.add(CatalogItem(i))
-                                }
-                                adapter.addAll(items)
-                                catalogRecyclerView = view.findViewById(R.id.catalog_recyclerview)
-                                catalogRecyclerView.adapter = adapter
-                                catalogRecyclerView.layoutManager = GridLayoutManager(context, 2)
-                            }
-                        })
-                    }
-                    else -> {
-                        (activity as MainActivity).hideBottomNav()
-                        navController.navigate(R.id.navigate_to_login_fragment)
-                    }
+        loginViewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
+            when (authenticationState) {
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+                    (activity as MainActivity).showBottomNav()
+                    observeToastEvents()
+                    loadData()
                 }
-            })
+                else -> {
+                    (activity as MainActivity).hideBottomNav()
+                    navController.navigate(R.id.navigate_to_login_fragment)
+                }
+            }
+        }
+    }
 
+    private fun observeToastEvents() {
+        catalogViewModel.showErrorToastEvents.observe(viewLifecycleOwner) { errorMessage ->
+            Toast.makeText(
+                context,
+                getString(R.string.mushrooms_error_template, errorMessage),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
+    private fun loadData() {
+        catalogViewModel.loadData()
+
+        adapter = GroupAdapter()
+        catalogRecyclerView = requireView().findViewById(R.id.catalog_recyclerview)
+        catalogRecyclerView.adapter = adapter
+        catalogRecyclerView.layoutManager = GridLayoutManager(context, 2)
+
+        catalogViewModel.mushrooms.observe(viewLifecycleOwner) { mushrooms ->
+            for (mushroom in mushrooms) {
+                items.add(CatalogItem(mushroom))
+            }
+            adapter.addAll(items)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -82,8 +95,8 @@ class CatalogFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null)
                     adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
-                            .contains(query.toLowerCase(Locale.getDefault()))
+                        it.mushroom.name.lowercase(Locale.getDefault())
+                            .contains(query.lowercase(Locale.getDefault()))
                     }, true, null)
                 else
                     adapter.updateAsync(items, true, null)
@@ -91,17 +104,17 @@ class CatalogFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (newText != null)
-                    adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
-                            .contains(newText.toLowerCase(Locale.getDefault()))
-                    }, true, null)
-                else
+                if (newText != null) {
+                    val newItems = items.filter {
+                        it.mushroom.name.lowercase(Locale.getDefault())
+                            .contains(newText.lowercase(Locale.getDefault()))
+                    }
+                    adapter.updateAsync(newItems, true, null)
+                } else {
                     adapter.updateAsync(items, true, null)
+                }
                 return true
             }
         })
     }
-
-
 }
