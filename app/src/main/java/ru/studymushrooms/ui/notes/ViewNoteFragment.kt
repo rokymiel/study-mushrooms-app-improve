@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
 
-class CreateNoteFragment : Fragment(R.layout.fragment_view_note) {
+class ViewNoteFragment : Fragment(R.layout.fragment_view_note) {
 
     private val viewModel: NotesViewModel by activityViewModels()
 
@@ -33,13 +33,17 @@ class CreateNoteFragment : Fragment(R.layout.fragment_view_note) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.submit_menu, menu)
+        inflater.inflate(R.menu.save_delete_menu, menu)
         super.onCreateOptionsMenu(menu, requireActivity().menuInflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.submit) {
-            viewModel.saveNote(titleEditText.text.toString(), contentEditText.text.toString())
+            viewModel.updateNote(titleEditText.text.toString(), contentEditText.text.toString())
+            findNavController().popBackStack()
+            return true
+        } else if (item.itemId == R.id.delete) {
+            viewModel.deleteNote(titleEditText.text.toString(), contentEditText.text.toString())
             findNavController().popBackStack()
             return true
         }

@@ -35,6 +35,18 @@ interface ServerApi {
         @Body noteModel: NoteModel
     ): Call<ResponseBody>
 
+    @PUT("/api/notes/update") // todo протестить
+    fun updateNote(
+        @Header("Authorization") token: String,
+        @Body noteModel: NoteModel
+    ): Call<ResponseBody>
+
+    @DELETE("/api/notes/delete") // todo протестить
+    fun deleteNote(
+        @Header("Authorization") token: String,
+        @Body noteModel: NoteModel
+    ): Call<ResponseBody>
+
     @GET("/api/places")
     fun getPlaces(@Header("Authorization") token: String): Call<List<PlaceModel>>
 

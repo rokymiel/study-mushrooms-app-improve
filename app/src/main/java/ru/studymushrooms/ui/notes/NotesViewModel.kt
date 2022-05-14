@@ -16,6 +16,7 @@ import java.util.*
 
 class NotesViewModel : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
+    val clickItem = SingleLiveEvent<NoteItem>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
 
     private val _notes: MutableLiveData<List<NoteModel>> = MutableLiveData()
@@ -53,6 +54,46 @@ class NotesViewModel : ViewModel() {
         )
 
         App.api.postNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
+            }
+        })
+    }
+
+    fun updateNote(title: String, new_content: String) { // todo протестить
+        val noteModel = NoteModel(
+            title = title,
+            content = new_content,
+            date = Date(),
+            author = null,
+            id = null
+        )
+
+        App.api.updateNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+
+            }
+        })
+    }
+
+    fun deleteNote(title: String, content: String) { // todo протестить
+        val noteModel = NoteModel(
+            title = title,
+            content = content, // нужны ли сюда вообще контент и заголовок, если удаляем?
+            date = Date(),
+            author = null,
+            id = null
+        )
+
+        App.api.deleteNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
 
             }

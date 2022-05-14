@@ -44,7 +44,7 @@
         android:id="@+id/create_note_navigation"
         android:name="ru.studymushrooms.ui.notes.CreateNoteFragment"
         android:label="Создание заметки"
-        tools:layout="@layout/fragment_create_note">
+        tools:layout="@layout/fragment_view_note">
 
     </fragment>
 </navigation>
