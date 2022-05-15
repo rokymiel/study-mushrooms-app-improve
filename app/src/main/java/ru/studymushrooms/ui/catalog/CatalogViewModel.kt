@@ -3,14 +3,21 @@ package ru.studymushrooms.ui.catalog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.studymushrooms.App
 import ru.studymushrooms.api.MushroomModel
+import ru.studymushrooms.repository.CatalogRepository
 import ru.studymushrooms.utils.SingleLiveEvent
 
-class CatalogViewModel : ViewModel() {
+class CatalogViewModel(
+    private val catalogRepository: CatalogRepository,
+) : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
 
@@ -19,23 +26,16 @@ class CatalogViewModel : ViewModel() {
 
     fun loadData() {
         if (mushrooms.value == null) {
-            val call = App.api.getMushrooms(App.token!!, null, null)
-            call.enqueue(object : Callback<List<MushroomModel>> {
-                override fun onFailure(call: Call<List<MushroomModel>>, t: Throwable) {
+            viewModelScope.launch {
+                try {
+                    val mushrooms = withContext(Dispatchers.IO) {
+                        catalogRepository.getMushrooms(App.token!!, null, null)
+                    }
+                    _mushrooms.value = mushrooms
+                } catch (t: Throwable) {
                     _showErrorToastEvents.value = t.message
                 }
-
-                override fun onResponse(
-                    call: Call<List<MushroomModel>>,
-                    response: Response<List<MushroomModel>>
-                ) {
-                    if (response.isSuccessful) {
-                        _mushrooms.value = response.body()
-                    } else {
-                        _showErrorToastEvents.value = response.errorBody().toString()
-                    }
-                }
-            })
+            }
         }
     }
 }

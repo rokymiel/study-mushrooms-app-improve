@@ -16,6 +16,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
@@ -34,6 +36,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 import ru.studymushrooms.App
 import ru.studymushrooms.R
 import ru.studymushrooms.api.PlaceModel
+import ru.studymushrooms.service_locator.ServiceLocator
 
 private const val PREFS_NAME = "ru.studymushrooms.prefs"
 private const val PREFS_TILE_SOURCE = "tilesource"
@@ -45,7 +48,14 @@ private const val PREFS_ZOOM_LEVEL_DOUBLE = "zoomLevelDouble"
 private const val REQUEST_PERMISSIONS_REQUEST_CODE = 1
 
 class MapsFragment : Fragment(R.layout.fragment_maps) {
-    private val viewModel: MapsViewModel by viewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val viewModel: MapsViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return MapsViewModel(ServiceLocator.placesRepository) as T
+            }
+        }
+    }
 
     private lateinit var mapView: MapView
     private lateinit var prefs: SharedPreferences
@@ -82,7 +92,11 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
         mapView.overlays.add(rotationGestureOverlay)
 
         val compassOverlay =
-            CompassOverlay(requireContext(), InternalCompassOrientationProvider(requireContext()), mapView)
+            CompassOverlay(
+                requireContext(),
+                InternalCompassOrientationProvider(requireContext()),
+                mapView
+            )
         compassOverlay.enableCompass()
         mapView.overlays.add(compassOverlay)
 
@@ -196,7 +210,8 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
                 }
             }
 
-            Picasso.get().load(App.baseUrl + place.rawImage).into(marker)
+            // TODO: fix this in mapping
+            Picasso.get().load(ServiceLocator.baseUrl + place.rawImage).into(marker)
 
             marker.position =
                 GeoPoint(

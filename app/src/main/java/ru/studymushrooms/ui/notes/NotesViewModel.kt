@@ -1,20 +1,21 @@
 package ru.studymushrooms.ui.notes
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.studymushrooms.App
 import ru.studymushrooms.api.NoteModel
+import ru.studymushrooms.repository.NoteRepository
 import ru.studymushrooms.utils.SingleLiveEvent
 import java.util.*
 
-class NotesViewModel : ViewModel() {
+class NotesViewModel(
+    private val noteRepository: NoteRepository,
+) : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
 
@@ -23,83 +24,46 @@ class NotesViewModel : ViewModel() {
 
     fun loadData() {
         if (notes.value == null) {
-            val call = App.api.getNotes(App.token!!)
-            call.enqueue(object : Callback<List<NoteModel>> {
-                override fun onFailure(call: Call<List<NoteModel>>, t: Throwable) {
+            viewModelScope.launch {
+                try {
+                    val notes = withContext(Dispatchers.IO) {
+                        noteRepository.getNotes(App.token!!)
+                    }
+                    _notes.value = notes
+                } catch (t: Throwable) {
                     _showErrorToastEvents.value = t.message
                 }
-
-                override fun onResponse(
-                    call: Call<List<NoteModel>>,
-                    response: Response<List<NoteModel>>
-                ) {
-                    if (response.isSuccessful) {
-                        _notes.value = response.body()
-                    } else {
-                        _showErrorToastEvents.value = response.errorBody().toString()
-                    }
-                }
-            })
+            }
         }
     }
 
     fun saveNote(title: String, content: String) {
-        val noteModel = NoteModel(
-            title = title,
-            content = content,
-            date = Date(),
-            author = null,
-            id = null
-        )
-
-        App.api.postNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
+        viewModelScope.launch {
+            try {
+                noteRepository.postNote(App.token!!, title, content, Date())
+            } catch (t: Throwable) {
+                // TODO: do something
             }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
-            }
-        })
+        }
     }
 
-    fun updateNote(title: String, new_content: String) { // todo протестить
-        val noteModel = NoteModel(
-            title = title,
-            content = new_content,
-            date = Date(),
-            author = null,
-            id = null
-        )
-
-        App.api.updateNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
+    fun updateNote(title: String, newContent: String) { // todo протестить
+        viewModelScope.launch {
+            try {
+                noteRepository.updateNote(App.token!!, title, newContent, Date())
+            } catch (t: Throwable) {
+                // TODO: c'mon, do something
             }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
-            }
-        })
+        }
     }
 
     fun deleteNote(title: String, content: String) { // todo протестить
-        val noteModel = NoteModel(
-            title = title,
-            content = content, // нужны ли сюда вообще контент и заголовок, если удаляем?
-            date = Date(),
-            author = null,
-            id = null
-        )
-
-        App.api.deleteNote(App.token!!, noteModel).enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
+        viewModelScope.launch {
+            try {
+                noteRepository.deleteNote(App.token!!, title, content)
+            } catch (e: Exception) {
+                // TODO: ыыыыыыыыыыыыыыыыыыыыыыыы
             }
-
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-
-            }
-        })
+        }
     }
 }

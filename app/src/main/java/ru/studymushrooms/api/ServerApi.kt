@@ -4,7 +4,6 @@ import com.cocoahero.android.geojson.Point
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.http.*
 import java.io.Serializable
 import java.util.*
@@ -12,55 +11,55 @@ import java.util.*
 interface ServerApi {
 
     @POST("/api/register")
-    fun register(@Body loginModel: LoginModel): Call<TokenResponse>
+    suspend fun register(@Body loginModel: LoginModel): TokenResponse
 
     @GET("/api/user_info")
-    fun getUserInfo(@Header("Authorization") token: String): Call<UserModel>
+    suspend fun getUserInfo(@Header("Authorization") token: String): UserModel
 
     @POST("/api/login")
-    fun login(@Body loginModel: LoginModel): Call<TokenResponse>
+    suspend fun login(@Body loginModel: LoginModel): TokenResponse
 
     @POST("/api/recognize")
-    fun recognize(
+    suspend fun recognize(
         @Header("Authorization") token: String,
         @Body body: ImageRequest
-    ): Call<List<RecognitionModel>>
+    ): List<RecognitionModel>
 
     @GET("/api/notes")
-    fun getNotes(@Header("Authorization") token: String): Call<List<NoteModel>>
+    suspend fun getNotes(@Header("Authorization") token: String): List<NoteModel>
 
     @POST("/api/notes")
-    fun postNote(
+    suspend fun postNote(
         @Header("Authorization") token: String,
         @Body noteModel: NoteModel
-    ): Call<ResponseBody>
+    ): ResponseBody
 
     @PUT("/api/notes/update") // todo протестить
-    fun updateNote(
+    suspend fun updateNote(
         @Header("Authorization") token: String,
         @Body noteModel: NoteModel
-    ): Call<ResponseBody>
+    ): ResponseBody
 
     @DELETE("/api/notes/delete") // todo протестить
-    fun deleteNote(
+    suspend fun deleteNote(
         @Header("Authorization") token: String,
         @Body noteModel: NoteModel
-    ): Call<ResponseBody>
+    ): ResponseBody
 
     @GET("/api/places")
-    fun getPlaces(@Header("Authorization") token: String): Call<List<PlaceModel>>
+    suspend fun getPlaces(@Header("Authorization") token: String): List<PlaceModel>
 
     @POST("/api/places")
-    fun addPlace(
+    suspend fun addPlace(
         @Header("Authorization") token: String,
         @Body place: PlaceModel
-    ): Call<ResponseBody>
+    ): ResponseBody
 
     @GET("/api/mushrooms")
-    fun getMushrooms(
+    suspend fun getMushrooms(
         @Header("Authorization") token: String, @Query("limit") limit: Int?,
         @Query("offset") offset: Int?
-    ): Call<List<MushroomModel>>
+    ): List<MushroomModel>
 }
 
 data class LoginModel(

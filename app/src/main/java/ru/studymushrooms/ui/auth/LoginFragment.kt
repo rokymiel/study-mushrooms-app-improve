@@ -8,10 +8,13 @@ import android.widget.Button
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputEditText
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
+import ru.studymushrooms.service_locator.ServiceLocator
 
 class LoginFragment : Fragment(R.layout.login_fragment) {
 
@@ -23,7 +26,14 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     private lateinit var passwordEditTextRegister: TextInputEditText
     private lateinit var signupButton: Button
 
-    private val viewModel: LoginViewModel by activityViewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val viewModel: LoginViewModel by activityViewModels() {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return LoginViewModel(ServiceLocator.authorizationRepository) as T
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -4,13 +4,20 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 import ru.studymushrooms.App
 import ru.studymushrooms.api.LoginModel
 import ru.studymushrooms.api.TokenResponse
+import ru.studymushrooms.repository.AuthorizationRepository
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val authorizationRepository: AuthorizationRepository,
+) : ViewModel() {
 
     enum class AuthenticationState {
         UNAUTHENTICATED,
@@ -27,61 +34,33 @@ class LoginViewModel : ViewModel() {
 
 
     fun authenticate(username: String, password: String) {
-        val call = App.api.login(
-            LoginModel(
-                null,
-                username,
-                password
-            )
-        )
-
-        call.enqueue(object : retrofit2.Callback<TokenResponse> {
-            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    authorizationRepository.login(null, username, password)
+                }
+                App.token = "Token " + response.token
+                _authenticationState.value = AuthenticationState.AUTHENTICATED
+            } catch (t: Throwable) {
                 Log.e("Retrofit", t.toString())
                 _authenticationState.value = AuthenticationState.UNAUTHENTICATED
             }
-
-            override fun onResponse(
-                call: Call<TokenResponse>,
-                response: Response<TokenResponse>
-            ) {
-                if (response.isSuccessful) {
-                    App.token = "Token " + response.body()?.token
-                    _authenticationState.value = AuthenticationState.AUTHENTICATED
-                } else {
-                    _authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
-                }
-            }
-
-        })
-
+        }
     }
 
     fun register(username: String, email: String, password: String) {
-        val call = App.api.register(
-            LoginModel(
-                email,
-                username,
-                password
-            )
-        )
-
-        call.enqueue(object : retrofit2.Callback<TokenResponse> {
-            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+        viewModelScope.launch {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    authorizationRepository.login(email, username, password)
+                }
+                App.token = "Token " + response.token
+                _authenticationState.value = AuthenticationState.AUTHENTICATED
+            } catch (t: Throwable) {
                 Log.e("Retrofit", t.toString())
                 _authenticationState.value = AuthenticationState.UNAUTHENTICATED
             }
-
-            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                if (response.isSuccessful) {
-                    App.token = "Token " + response.body()?.token
-                    _authenticationState.value = AuthenticationState.AUTHENTICATED
-                } else
-                    _authenticationState.value = AuthenticationState.INVALID_AUTHENTICATION
-
-            }
-
-        })
+        }
     }
 
     fun refuseAuthentication() {

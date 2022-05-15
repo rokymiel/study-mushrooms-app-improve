@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,9 +17,18 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.studymushrooms.R
+import ru.studymushrooms.service_locator.ServiceLocator
 
 class NotesFragment : Fragment(R.layout.notes_fragment) {
-    private val notesViewModel: NotesViewModel by activityViewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val notesViewModel: NotesViewModel by activityViewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return NotesViewModel(ServiceLocator.noteRepository) as T
+            }
+
+        }
+    }
 
     private lateinit var recyclerView: RecyclerView
     private val adapter: GroupAdapter<GroupieViewHolder> = GroupAdapter()

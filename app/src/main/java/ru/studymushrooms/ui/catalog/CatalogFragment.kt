@@ -7,6 +7,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,14 +16,29 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
+import ru.studymushrooms.service_locator.ServiceLocator
 import ru.studymushrooms.ui.auth.LoginViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CatalogFragment : Fragment(R.layout.fragment_catalog) {
+    @Suppress("UNCHECKED_CAST")
+    private val loginViewModel: LoginViewModel by activityViewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return LoginViewModel(ServiceLocator.authorizationRepository) as T
+            }
+        }
+    }
 
-    private val loginViewModel: LoginViewModel by activityViewModels()
-    private val catalogViewModel: CatalogViewModel by viewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val catalogViewModel: CatalogViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return CatalogViewModel(ServiceLocator.catalogRepository) as T
+            }
+        }
+    }
 
     private val items: ArrayList<CatalogItem> = ArrayList()
     private lateinit var catalogRecyclerView: RecyclerView

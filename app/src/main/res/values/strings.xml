@@ -45,4 +45,7 @@
 
     <string name="confirm_button_text">Да</string>
     <string name="dismiss_button_text">Отмена</string>
+
+    <string name="place_success">Место добавлено</string>
+    <string name="place_error">Что-то пошло не так, место не добавлено</string>
 </resources>

@@ -6,13 +6,24 @@ import android.view.*
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
+import ru.studymushrooms.service_locator.ServiceLocator
 
 class ViewNoteFragment : Fragment(R.layout.fragment_view_note) {
 
-    private val viewModel: NotesViewModel by activityViewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val viewModel: NotesViewModel by activityViewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return NotesViewModel(ServiceLocator.noteRepository) as T
+            }
+
+        }
+    }
 
     private lateinit var titleEditText: EditText
     private lateinit var contentEditText: EditText

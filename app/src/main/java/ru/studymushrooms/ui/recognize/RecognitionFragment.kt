@@ -17,7 +17,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cocoahero.android.geojson.Point
@@ -26,10 +29,19 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
+import ru.studymushrooms.service_locator.ServiceLocator
+import ru.studymushrooms.ui.notes.NotesViewModel
 
 
 class RecognitionFragment : Fragment(R.layout.fragment_recognition) {
-    private val recognitionViewModel: RecognitionViewModel by viewModels()
+    @Suppress("UNCHECKED_CAST")
+    private val recognitionViewModel: RecognitionViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return RecognitionViewModel(ServiceLocator.recognitionRepository) as T
+            }
+        }
+    }
 
     private lateinit var recognizeStorageButton: Button
     private lateinit var recognizePhotoButton: Button
