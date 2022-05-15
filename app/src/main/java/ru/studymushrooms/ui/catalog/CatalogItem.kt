@@ -48,9 +48,8 @@ class CatalogItem(val mushroom: MushroomModel) : Item() {
         }
 
         val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)
-        Picasso.get().load(mushroom.pictureLink).into(image, new Callback() {
-            @Override
-            public void onError(Exception e) {
+        Picasso.get().load(mushroom.pictureLink).into(image, Callback() {
+            override public void onError(Exception e) {
                 Toast.makeText(
                     context,
                     "Ошибка при загрузке картинки",
