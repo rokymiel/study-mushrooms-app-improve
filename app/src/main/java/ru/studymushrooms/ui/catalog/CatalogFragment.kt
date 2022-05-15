@@ -93,11 +93,22 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
     private fun search(searchView: SearchView) {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null)
-                    adapter.updateAsync(items.filter {
+                if (query != null){
+                    val newItems = items.filter {
                         it.mushroom.name.lowercase(Locale.getDefault())
                             .contains(query.lowercase(Locale.getDefault()))
-                    }, true, null)
+                    }
+                    if (newItems.isEmpty()){
+                        Toast.makeText(
+                                context,
+                                "Ничего не найдено",
+                                Toast.LENGTH_LONG
+                        ).show()
+                        adapter.updateAsync(items, true, null)
+                    }
+                    else
+                        adapter.updateAsync(newItems, true, null)
+                }
                 else
                     adapter.updateAsync(items, true, null)
                 return false
