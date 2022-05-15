@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -49,17 +50,24 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
         signupButton = requireView().findViewById(R.id.signup_button)
 
         loginButton.setOnClickListener {
+            val username = usernameEditTextLogin.text.toString()
+            val password = passwordEditTextLogin.text.toString()
+
             viewModel.authenticate(
-                usernameEditTextLogin.text.toString(),
-                passwordEditTextLogin.text.toString()
+                username,
+                password
             )
         }
 
         signupButton.setOnClickListener {
+            val username = usernameEditTextRegister.text.toString()
+            val password = passwordEditTextRegister.text.toString()
+            val email = emailEditTextRegister.text.toString()
+
             viewModel.register(
-                usernameEditTextRegister.text.toString(),
-                emailEditTextRegister.text.toString(),
-                passwordEditTextRegister.text.toString()
+                username,
+                email,
+                password
             )
         }
 
@@ -68,11 +76,54 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
             viewModel.refuseAuthentication()
         }
 
+        viewModel.showToastEvents.observe(viewLifecycleOwner) { toastEvent ->
+            val toastString = when (toastEvent) {
+                is ToastEvent.ErrorString -> getString(
+                    R.string.validation_error_template,
+                    toastEvent.errorMessage
+                )
+                is ToastEvent.ResString -> getString(toastEvent.res)
+            }
+            Toast.makeText(
+                context,
+                toastString,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
         viewModel.authenticationState.observe(viewLifecycleOwner) { authenticationState ->
             when (authenticationState) {
                 LoginViewModel.AuthenticationState.AUTHENTICATED -> navController.popBackStack()
                 LoginViewModel.AuthenticationState.INVALID_AUTHENTICATION -> showErrorMessage()
             }
+        }
+
+        viewModel.registerEvents.observe(viewLifecycleOwner) { registerEvent ->
+            val toastString = when (registerEvent) {
+                is RegisterEvents.RegisterResult -> getString(
+                    R.string.register_error_template,
+                    registerEvent.message
+                )
+            }
+            Toast.makeText(
+                context,
+                toastString,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        viewModel.loginEvents.observe(viewLifecycleOwner) { loginEvent ->
+            val toastString = when (loginEvent) {
+                is LoginEvents.LoginResult -> getString(
+                    R.string.login_error_template,
+                    loginEvent.message
+                )
+            }
+            Toast.makeText(
+                context,
+                toastString,
+                Toast.LENGTH_LONG
+            ).show()
         }
 
     }

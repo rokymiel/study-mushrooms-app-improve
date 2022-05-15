@@ -20,11 +20,11 @@
     <string name="title_notes">Заметки</string>
 
     <string name="location_permission_toast">Turn on location</string>
-    
+
     <string name="edible_mushroom">Съедобный</string>
     <string name="halfedible_mushroom">Полусъедобный</string>
     <string name="inedible_mushroom">Несъедобный</string>
-    
+
     <string name="ellipsised_description_template" formatted="true">%1$s…</string>
 
     <string name="proba_template" formatted="true">Уверенность %1$.3f\%</string>
@@ -34,7 +34,13 @@
     <string name="mushrooms_error_template" formatted="true">Failed to load mushrooms, error %1$s</string>
     <string name="notes_error_template" formatted="true">Failed to load notes, error %1$s</string>
 
-    <string name="login_error">Что-то пошло не так, вероятно, были предоставлены неверные данные.</string>
+    <string name="validation_error_template" formatted="true">Неверные данные регистрации. %1$s</string>
+    <string name="username_error_template" formatted="true">Некорректное имя пользователя:
+        должно иметь не менее 6 символов и состоять только из цифр и латинских букв</string>
+    <string name="email_error_template" formatted="true">Некорректный формат электронной почты</string>
+    <string name="password_error_template" formatted="true">Некорректный пароль:
+        должен иметь не менее 8 символов, хотя бы одну цифру и заглавную и строчную букву</string>
+
     <string name="photo_new_mushroom_label">Сфотографировать новый гриб</string>
     <string name="choose_from_local_storage_label">Выбрать из локального хранилища</string>
     <string name="recognition_label">Скорее всего это…</string>
@@ -48,4 +54,14 @@
 
     <string name="place_success">Место добавлено</string>
     <string name="place_error">Что-то пошло не так, место не добавлено</string>
+
+
+    <string name="register_error_template">Регистрация не прошла успешно. %1$s</string>
+    <string name="register_success">Регистрация прошла успешно</string>
+    <string name="register_error">Что-то пошло не так.
+        Возможно, такое имя пользователя или электронная почта уже зарегистрированы. </string>
+
+    <string name="login_error_template">Регистрация не прошла успешно. %1$s</string>
+    <string name="login_success">Регистрация прошла успешно</string>
+    <string name="login_error">Что-то пошло не так при аутентификации. Попробуйте еще раз.</string>
 </resources>
