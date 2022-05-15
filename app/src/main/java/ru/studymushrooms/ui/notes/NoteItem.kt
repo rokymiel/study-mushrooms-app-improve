@@ -2,13 +2,13 @@ package ru.studymushrooms.ui.notes
 
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import ru.studymushrooms.R
 import ru.studymushrooms.api.NoteModel
 
-class NoteItem(val noteModel: NoteModel, val notesViewModel: NotesViewModel) :
+class NoteItem(val noteModel: NoteModel, val navController: NavController) :
     Item<GroupieViewHolder>() {
 
     override fun getLayout(): Int = R.layout.note_item
@@ -20,10 +20,8 @@ class NoteItem(val noteModel: NoteModel, val notesViewModel: NotesViewModel) :
         viewHolder.itemView.findViewById<TextView>(R.id.note_date_textview).text =
             noteModel.date.toString()
 
-        viewHolder.itemView.setOnClickListener{
-
+        viewHolder.itemView.setOnClickListener {
+            navController.navigate(R.id.navigate_to_note_creation)
         }
     }
-
-
 }

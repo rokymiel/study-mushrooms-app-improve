@@ -16,7 +16,6 @@ import java.util.*
 
 class NotesViewModel : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
-    val clickItem = SingleLiveEvent<NoteItem>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
 
     private val _notes: MutableLiveData<List<NoteModel>> = MutableLiveData()

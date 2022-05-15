@@ -34,7 +34,7 @@ class NotesFragment : Fragment(R.layout.notes_fragment) {
 
         notesViewModel.notes.observe(viewLifecycleOwner) { notes ->
             for (note in notes) {
-                items.add(NoteItem(note, notesViewModel))
+                items.add(NoteItem(note, navController = findNavController()))
             }
             adapter.addAll(items)
         }
@@ -46,8 +46,6 @@ class NotesFragment : Fragment(R.layout.notes_fragment) {
                 Toast.LENGTH_LONG
             ).show()
         }
-
-//        notesViewModel.clickItem
 
         button.setOnClickListener {
             findNavController().navigate(R.id.navigate_to_note_creation)

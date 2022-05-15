@@ -39,11 +39,22 @@
         <action
             android:id="@+id/navigate_to_note_creation"
             app:destination="@id/create_note_navigation" />
+        <action
+            android:id="@+id/navigate_to_note_view"
+            app:destination="@id/view_note_navigation" />
     </fragment>
     <fragment
         android:id="@+id/create_note_navigation"
         android:name="ru.studymushrooms.ui.notes.CreateNoteFragment"
         android:label="Создание заметки"
+        tools:layout="@layout/fragment_view_note">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/view_note_navigation"
+        android:name="ru.studymushrooms.ui.notes.ViewNoteFragment"
+        android:label="Просмотр заметки"
         tools:layout="@layout/fragment_view_note">
 
     </fragment>
