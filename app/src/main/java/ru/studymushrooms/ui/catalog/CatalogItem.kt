@@ -48,15 +48,19 @@ class CatalogItem(val mushroom: MushroomModel) : Item() {
         }
 
         val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)
-        Picasso.get().load(mushroom.pictureLink).into(image, Callback() {
-            override public void onError(Exception e) {
-                Toast.makeText(
-                    context,
-                    "Ошибка при загрузке картинки",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        })
+        val picasso = Picasso.Builder(context).listener(
+                    object : Picasso.Listener{
+                        override fun onImageLoadFailed(picasso: Picasso?, uri: Uri?, exception: Exception?) {
+                             Toast.makeText(
+                                context,
+                                "Ошибка при загрузке картинки",
+                                Toast.LENGTH_LONG
+                            `).show()
+                        }
+
+                    }
+            ).build()
+        picasso.load(mushroom.pictureLink).fit().into(image)
 
         val card = viewHolder.itemView.findViewById<MaterialCardView>(R.id.card)
         card.setOnClickListener {
