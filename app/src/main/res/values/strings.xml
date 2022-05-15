@@ -61,7 +61,8 @@
     <string name="register_error">Что-то пошло не так.
         Возможно, такое имя пользователя или электронная почта уже зарегистрированы. </string>
 
-    <string name="login_error_template">Регистрация не прошла успешно. %1$s</string>
-    <string name="login_success">Регистрация прошла успешно</string>
-    <string name="login_error">Что-то пошло не так при аутентификации. Попробуйте еще раз.</string>
+    <string name="login_error_template">Вход не совершен. %1$s</string>
+    <string name="login_success">Вход совершен успешно</string>
+    <string name="login_error">Что-то пошло не так при аутентификации.
+        Проверьте данные и попробуйте еще раз.</string>
 </resources>
