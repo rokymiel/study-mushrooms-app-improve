@@ -8,15 +8,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Response
-import ru.studymushrooms.App
-import ru.studymushrooms.api.LoginModel
-import ru.studymushrooms.api.TokenResponse
 import ru.studymushrooms.repository.AuthorizationRepository
+import ru.studymushrooms.token.TokenHolder
 
 class LoginViewModel(
     private val authorizationRepository: AuthorizationRepository,
+    private val tokenHolder: TokenHolder,
 ) : ViewModel() {
 
     enum class AuthenticationState {
@@ -39,7 +36,7 @@ class LoginViewModel(
                 val response = withContext(Dispatchers.IO) {
                     authorizationRepository.login(null, username, password)
                 }
-                App.token = "Token " + response.token
+                tokenHolder.setToken("Token " + response.token)
                 _authenticationState.value = AuthenticationState.AUTHENTICATED
             } catch (t: Throwable) {
                 Log.e("Retrofit", t.toString())
@@ -54,7 +51,7 @@ class LoginViewModel(
                 val response = withContext(Dispatchers.IO) {
                     authorizationRepository.login(email, username, password)
                 }
-                App.token = "Token " + response.token
+                tokenHolder.setToken("Token " + response.token)
                 _authenticationState.value = AuthenticationState.AUTHENTICATED
             } catch (t: Throwable) {
                 Log.e("Retrofit", t.toString())

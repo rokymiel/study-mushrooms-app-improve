@@ -5,7 +5,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.studymushrooms.api.ServerApi
 import ru.studymushrooms.data.*
+import ru.studymushrooms.data.mappers.MushroomMapper
 import ru.studymushrooms.repository.*
+import ru.studymushrooms.token.TokenHolder
+import ru.studymushrooms.token.TokenHolderImpl
 
 private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
 
@@ -30,7 +33,7 @@ object ServiceLocator {
     }
 
     val catalogRepository: CatalogRepository by lazy {
-        CatalogRepositoryImpl(serverApi)
+        CatalogRepositoryImpl(serverApi, MushroomMapper())
     }
 
     val noteRepository: NoteRepository by lazy {
@@ -38,14 +41,16 @@ object ServiceLocator {
     }
 
     val placesRepository: PlacesRepository by lazy {
-        PlacesRepositoryImpl(serverApi)
+        PlacesRepositoryImpl(serverApi, baseUrl)
     }
 
     val recognitionRepository: RecognitionRepository by lazy {
-        RecognitionRepositoryImpl(serverApi)
+        RecognitionRepositoryImpl(serverApi, MushroomMapper())
     }
 
-    val baseUrl: String = "http://82.146.49.54:8000"
+    val tokenHolder: TokenHolder by lazy { TokenHolderImpl() }
+
+    private const val baseUrl: String = "http://82.146.49.54:8000"
 
     var token: String? = null
 }

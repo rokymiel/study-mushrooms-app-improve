@@ -38,7 +38,10 @@ class RecognitionFragment : Fragment(R.layout.fragment_recognition) {
     private val recognitionViewModel: RecognitionViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RecognitionViewModel(ServiceLocator.recognitionRepository) as T
+                return RecognitionViewModel(
+                    ServiceLocator.recognitionRepository,
+                    ServiceLocator.tokenHolder
+                ) as T
             }
         }
     }

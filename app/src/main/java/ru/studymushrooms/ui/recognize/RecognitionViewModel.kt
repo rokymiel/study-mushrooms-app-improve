@@ -1,35 +1,21 @@
 package ru.studymushrooms.ui.recognize
 
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.util.Base64
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.cocoahero.android.geojson.Point
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import ru.studymushrooms.App
-import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
-import ru.studymushrooms.api.ImageRequest
 import ru.studymushrooms.api.PlaceModel
-import ru.studymushrooms.api.RecognitionModel
 import ru.studymushrooms.repository.RecognitionRepository
+import ru.studymushrooms.token.TokenHolder
 import ru.studymushrooms.utils.SingleLiveEvent
 import java.io.ByteArrayOutputStream
 
@@ -50,6 +36,7 @@ sealed class RecognitionEvents {
 
 class RecognitionViewModel(
     private val recognitionRepository: RecognitionRepository,
+    private val tokenHolder: TokenHolder,
 ) : ViewModel() {
     private val _recognitionEvents = SingleLiveEvent<RecognitionEvents>()
     val recognitionEvents: LiveData<RecognitionEvents> = _recognitionEvents
@@ -69,7 +56,7 @@ class RecognitionViewModel(
         viewModelScope.launch {
             try {
                 val models = withContext(Dispatchers.IO) {
-                    recognitionRepository.recognize(App.token!!, b64Image)
+                    recognitionRepository.recognize(tokenHolder.getToken(), b64Image)
                 }
                 _recognitions.value = models.map { RecognitionItem(it) }
                 _mushroomImage.value = bitmap
@@ -85,7 +72,7 @@ class RecognitionViewModel(
         viewModelScope.launch {
             try {
                 recognitionRepository.addPlace(
-                    App.token!!,
+                    tokenHolder.getToken(),
                     PlaceModel(
                         rawImage = b64Image,
                         location = location,

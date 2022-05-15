@@ -27,10 +27,13 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
     private lateinit var signupButton: Button
 
     @Suppress("UNCHECKED_CAST")
-    private val viewModel: LoginViewModel by activityViewModels() {
+    private val viewModel: LoginViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LoginViewModel(ServiceLocator.authorizationRepository) as T
+                return LoginViewModel(
+                    ServiceLocator.authorizationRepository,
+                    ServiceLocator.tokenHolder
+                ) as T
             }
         }
     }

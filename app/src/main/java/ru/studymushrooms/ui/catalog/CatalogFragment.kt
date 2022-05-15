@@ -26,7 +26,10 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
     private val loginViewModel: LoginViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LoginViewModel(ServiceLocator.authorizationRepository) as T
+                return LoginViewModel(
+                    ServiceLocator.authorizationRepository,
+                    ServiceLocator.tokenHolder
+                ) as T
             }
         }
     }
@@ -35,7 +38,10 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog) {
     private val catalogViewModel: CatalogViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return CatalogViewModel(ServiceLocator.catalogRepository) as T
+                return CatalogViewModel(
+                    ServiceLocator.catalogRepository,
+                    ServiceLocator.tokenHolder
+                ) as T
             }
         }
     }

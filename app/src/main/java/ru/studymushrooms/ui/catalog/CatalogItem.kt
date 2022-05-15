@@ -10,10 +10,7 @@ import ru.studymushrooms.R
 import ru.studymushrooms.api.MushroomModel
 import ru.studymushrooms.ui.activities.MushroomActivity
 
-// TODO: change to mapping in repository
 private const val MAX_DESCRIPTION_LENGTH = 30
-const val IMAGE_PREFIX = "/image"
-const val IMAGE_BASE_URL = "https://wikigrib.ru"
 
 class CatalogItem(val mushroom: MushroomModel) : Item() {
     private val typeToKey = mapOf(
@@ -41,10 +38,6 @@ class CatalogItem(val mushroom: MushroomModel) : Item() {
             )
         } else {
             secondaryEditText.text = mushroom.description
-        }
-
-        if (mushroom.pictureLink.startsWith(IMAGE_PREFIX)) {
-            mushroom.pictureLink = IMAGE_BASE_URL + mushroom.pictureLink
         }
 
         val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)

@@ -7,16 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import ru.studymushrooms.App
 import ru.studymushrooms.api.MushroomModel
 import ru.studymushrooms.repository.CatalogRepository
+import ru.studymushrooms.token.TokenHolder
 import ru.studymushrooms.utils.SingleLiveEvent
 
 class CatalogViewModel(
     private val catalogRepository: CatalogRepository,
+    private val tokenHolder: TokenHolder,
 ) : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
@@ -29,7 +27,7 @@ class CatalogViewModel(
             viewModelScope.launch {
                 try {
                     val mushrooms = withContext(Dispatchers.IO) {
-                        catalogRepository.getMushrooms(App.token!!, null, null)
+                        catalogRepository.getMushrooms(tokenHolder.getToken(), null, null)
                     }
                     _mushrooms.value = mushrooms
                 } catch (t: Throwable) {

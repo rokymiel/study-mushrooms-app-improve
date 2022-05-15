@@ -9,9 +9,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -33,7 +31,6 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
-import ru.studymushrooms.App
 import ru.studymushrooms.R
 import ru.studymushrooms.api.PlaceModel
 import ru.studymushrooms.service_locator.ServiceLocator
@@ -52,7 +49,10 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
     private val viewModel: MapsViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MapsViewModel(ServiceLocator.placesRepository) as T
+                return MapsViewModel(
+                    ServiceLocator.placesRepository,
+                    ServiceLocator.tokenHolder
+                ) as T
             }
         }
     }
@@ -210,8 +210,7 @@ class MapsFragment : Fragment(R.layout.fragment_maps) {
                 }
             }
 
-            // TODO: fix this in mapping
-            Picasso.get().load(ServiceLocator.baseUrl + place.rawImage).into(marker)
+            Picasso.get().load(place.rawImage).into(marker)
 
             marker.position =
                 GeoPoint(

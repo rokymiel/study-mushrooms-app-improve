@@ -7,15 +7,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import ru.studymushrooms.App
 import ru.studymushrooms.api.PlaceModel
 import ru.studymushrooms.repository.PlacesRepository
+import ru.studymushrooms.token.TokenHolder
 
 class MapsViewModel(
     private val placesRepository: PlacesRepository,
+    private val tokenHolder: TokenHolder
 ) : ViewModel() {
     private val _places = MutableLiveData<List<PlaceModel>>()
     val places: LiveData<List<PlaceModel>> = _places
@@ -24,7 +22,7 @@ class MapsViewModel(
         viewModelScope.launch {
             try {
                 val places = withContext(Dispatchers.IO) {
-                    placesRepository.getPlaces(App.token!!)
+                    placesRepository.getPlaces(tokenHolder.getToken())
                 }
                 _places.value = places
             } catch (t: Throwable) {

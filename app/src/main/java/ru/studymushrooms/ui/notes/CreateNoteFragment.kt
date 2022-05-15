@@ -18,7 +18,7 @@ class CreateNoteFragment : Fragment(R.layout.fragment_view_note) {
     private val viewModel: NotesViewModel by activityViewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return NotesViewModel(ServiceLocator.noteRepository) as T
+                return NotesViewModel(ServiceLocator.noteRepository, ServiceLocator.tokenHolder) as T
             }
 
         }

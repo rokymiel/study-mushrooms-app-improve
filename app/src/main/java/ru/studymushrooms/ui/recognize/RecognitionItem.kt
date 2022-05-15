@@ -1,6 +1,5 @@
 package ru.studymushrooms.ui.recognize
 
-import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.material.card.MaterialCardView
@@ -10,8 +9,6 @@ import com.xwray.groupie.Item
 import ru.studymushrooms.R
 import ru.studymushrooms.api.RecognitionModel
 import ru.studymushrooms.ui.activities.MushroomActivity
-import ru.studymushrooms.ui.catalog.IMAGE_BASE_URL
-import ru.studymushrooms.ui.catalog.IMAGE_PREFIX
 
 class RecognitionItem(val recognition: RecognitionModel) : Item<GroupieViewHolder>() {
     private val typeToKey = mapOf(
@@ -35,10 +32,6 @@ class RecognitionItem(val recognition: RecognitionModel) : Item<GroupieViewHolde
         val secondaryText =  context.getString(R.string.proba_template, recognition.prob * 100)
         secondaryEditText.text = secondaryText
 
-        if (recognition.mushroom.pictureLink.startsWith(IMAGE_PREFIX)) {
-            recognition.mushroom.pictureLink =
-                IMAGE_BASE_URL + recognition.mushroom.pictureLink
-        }
         val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)
         Picasso.get().load(recognition.mushroom.pictureLink).into(image)
 

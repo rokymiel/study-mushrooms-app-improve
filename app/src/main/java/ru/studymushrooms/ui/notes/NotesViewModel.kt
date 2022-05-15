@@ -7,14 +7,15 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.studymushrooms.App
 import ru.studymushrooms.api.NoteModel
 import ru.studymushrooms.repository.NoteRepository
+import ru.studymushrooms.token.TokenHolder
 import ru.studymushrooms.utils.SingleLiveEvent
 import java.util.*
 
 class NotesViewModel(
     private val noteRepository: NoteRepository,
+    private val tokenHolder: TokenHolder,
 ) : ViewModel() {
     private val _showErrorToastEvents = SingleLiveEvent<String>()
     val showErrorToastEvents: LiveData<String> = _showErrorToastEvents
@@ -27,7 +28,7 @@ class NotesViewModel(
             viewModelScope.launch {
                 try {
                     val notes = withContext(Dispatchers.IO) {
-                        noteRepository.getNotes(App.token!!)
+                        noteRepository.getNotes(tokenHolder.getToken())
                     }
                     _notes.value = notes
                 } catch (t: Throwable) {
@@ -40,7 +41,7 @@ class NotesViewModel(
     fun saveNote(title: String, content: String) {
         viewModelScope.launch {
             try {
-                noteRepository.postNote(App.token!!, title, content, Date())
+                noteRepository.postNote(tokenHolder.getToken(), title, content, Date())
             } catch (t: Throwable) {
                 // TODO: do something
             }
@@ -50,7 +51,7 @@ class NotesViewModel(
     fun updateNote(title: String, newContent: String) { // todo протестить
         viewModelScope.launch {
             try {
-                noteRepository.updateNote(App.token!!, title, newContent, Date())
+                noteRepository.updateNote(tokenHolder.getToken(), title, newContent, Date())
             } catch (t: Throwable) {
                 // TODO: c'mon, do something
             }
@@ -60,7 +61,7 @@ class NotesViewModel(
     fun deleteNote(title: String, content: String) { // todo протестить
         viewModelScope.launch {
             try {
-                noteRepository.deleteNote(App.token!!, title, content)
+                noteRepository.deleteNote(tokenHolder.getToken(), title, content)
             } catch (e: Exception) {
                 // TODO: ыыыыыыыыыыыыыыыыыыыыыыыы
             }
