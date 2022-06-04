@@ -45,17 +45,7 @@ private const val PREFS_ZOOM_LEVEL_DOUBLE = "zoomLevelDouble"
 private const val REQUEST_PERMISSIONS_REQUEST_CODE = 1
 
 class MapsFragment : Fragment(R.layout.fragment_maps) {
-    @Suppress("UNCHECKED_CAST")
-    private val viewModel: MapsViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MapsViewModel(
-                    ServiceLocator.placesRepository,
-                    ServiceLocator.tokenHolder
-                ) as T
-            }
-        }
-    }
+    private val viewModel: MapsViewModel by viewModels { ServiceLocator.viewModelFactory }
 
     private lateinit var mapView: MapView
     private lateinit var prefs: SharedPreferences

@@ -22,29 +22,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class CatalogFragment : Fragment(R.layout.fragment_catalog) {
-    @Suppress("UNCHECKED_CAST")
-    private val loginViewModel: LoginViewModel by activityViewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return LoginViewModel(
-                    ServiceLocator.authorizationRepository,
-                    ServiceLocator.tokenHolder
-                ) as T
-            }
-        }
-    }
+    private val loginViewModel: LoginViewModel by activityViewModels { ServiceLocator.viewModelFactory }
 
-    @Suppress("UNCHECKED_CAST")
-    private val catalogViewModel: CatalogViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return CatalogViewModel(
-                    ServiceLocator.catalogRepository,
-                    ServiceLocator.tokenHolder
-                ) as T
-            }
-        }
-    }
+    private val catalogViewModel: CatalogViewModel by viewModels { ServiceLocator.viewModelFactory }
 
     private val items: ArrayList<CatalogItem> = ArrayList()
     private lateinit var catalogRecyclerView: RecyclerView

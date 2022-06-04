@@ -20,15 +20,7 @@ import ru.studymushrooms.R
 import ru.studymushrooms.service_locator.ServiceLocator
 
 class NotesFragment : Fragment(R.layout.notes_fragment) {
-    @Suppress("UNCHECKED_CAST")
-    private val notesViewModel: NotesViewModel by activityViewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return NotesViewModel(ServiceLocator.noteRepository, ServiceLocator.tokenHolder) as T
-            }
-
-        }
-    }
+    private val notesViewModel: NotesViewModel by activityViewModels { ServiceLocator.viewModelFactory }
 
     private lateinit var recyclerView: RecyclerView
     private val adapter: GroupAdapter<GroupieViewHolder> = GroupAdapter()

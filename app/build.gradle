@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+def mushroomsPropertiesFile = rootProject.file("mushrooms.properties")
+def mushroomsProperties = new Properties()
+mushroomsProperties.load(new FileInputStream(mushroomsPropertiesFile ))
+
 android {
     compileSdkVersion 31
 
@@ -13,6 +17,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", mushroomsProperties["BASE_URL"])
     }
 
     buildTypes {

@@ -14,16 +14,7 @@ import ru.studymushrooms.R
 import ru.studymushrooms.service_locator.ServiceLocator
 
 class ViewNoteFragment : Fragment(R.layout.fragment_view_note) {
-
-    @Suppress("UNCHECKED_CAST")
-    private val viewModel: NotesViewModel by activityViewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return NotesViewModel(ServiceLocator.noteRepository, ServiceLocator.tokenHolder) as T
-            }
-
-        }
-    }
+    private val viewModel: NotesViewModel by activityViewModels { ServiceLocator.viewModelFactory }
 
     private lateinit var titleEditText: EditText
     private lateinit var contentEditText: EditText

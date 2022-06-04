@@ -34,18 +34,7 @@ import ru.studymushrooms.ui.notes.NotesViewModel
 
 
 class RecognitionFragment : Fragment(R.layout.fragment_recognition) {
-    @Suppress("UNCHECKED_CAST")
-    private val recognitionViewModel: RecognitionViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return RecognitionViewModel(
-                    ServiceLocator.recognitionRepository,
-                    ServiceLocator.tokenHolder
-                ) as T
-            }
-        }
-    }
-
+    private val recognitionViewModel: RecognitionViewModel by viewModels { ServiceLocator.viewModelFactory }
     private lateinit var recognizeStorageButton: Button
     private lateinit var recognizePhotoButton: Button
 
