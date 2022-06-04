@@ -62,7 +62,9 @@ object ServiceLocator {
 
     val tokenHolder: TokenHolder by lazy { TokenHolderImpl() }
 
-    private const val baseUrl: String = "http://82.146.49.54:8000"
+    // Get base url from mushrooms.properties
+    // (not secure way, but seems okay for api base url)
+    private const val baseUrl: String = BuildConfig.BASE_URL
 
     private val viewModelFactories = mapOf(
         LoginViewModel::class.java to LoginViewModelFactory(),
